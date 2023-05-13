@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = true
+	symlinks = false
+	ignorecase = true
+	sharedrepository = 2
+[receive]
+	denyNonFastforwards = true
+[remote "develop_article"]
+	url = C:\\Users\\vernier\\Documents\\MATLAB\\steady-state\\grapeSteadyState _deuxespeces_article
+	fetch = +refs/heads/*:refs/remotes/develop_article/*

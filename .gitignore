@@ -1,0 +1,11 @@
+*.png 
+*.pdf 
+*.jpg
+*.mat
+*.fig
+*.xcf
+*.xlsx
+/0bin
+/0bin2
+/diff
+
