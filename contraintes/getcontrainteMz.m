@@ -3,15 +3,11 @@ function [contrainte] = getcontrainteMz(optimParam,spins,opt,f)
 %   Detailed explanation goes here
 
 
-alpha = getalpha_changementvar(opt,optimParam);
-TR = getTR_changementvar(opt,optimParam);
+alpha = opt.alpha;
+TR = opt.TR;
 i = 1;
 for p = 1:numel(opt.offsetVecHz):numel(spins) 
     
-    if spins{p}.on_resonnance == false
-        break;
-    end
-   
     EA = exp(-opt.TA/spins{p}.T1); %ms
     EB = exp(-opt.TB/spins{p}.T1); %ms
 

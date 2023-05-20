@@ -8,33 +8,23 @@ ez = [0 0 0 1]';
 e0 = [1 0 0 0]';
 
 % sum = 0;
-if opt.optimisation_TR
-    if opt.changement_variable_delais
-        v = [W(1:end-1,3)' opt.Nlignes*W(end,3)];
-        M1 = eye(opt.Np+1)*sum(v);
-        M2 = diag(W(1:end,3)')*ones(opt.Np+1);
-        M2(:,end)=opt.Nlignes*M2(:,end);
-        D_ti_alphai = (M1-M2)/(sum(v)^2)*opt.tempsfixe_valeur;
-    else
-        D_ti_alphai = eye(opt.Np+1);
-    end
-else
-    if opt.changement_variable_delais
-        
-        v = [W(1:end,3)'];
-        M1 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
-        M1(1:opt.Np,1:opt.Np) = eye(opt.Np)*sum(v);
-        M2 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
-        M2(1:opt.Np,1:opt.Np) = diag(W(1:opt.Np,3)')*ones(opt.Np);
-        D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes);
-        
-    else
-        D_ti_alphai = eye(size(W,1));
-    end
-end 
 
-alpha = getalpha_changementvar(opt,W);
-TR = getTR_changementvar(opt,W);
+if opt.changement_variable_delais
+
+    v = [W(1:end,3)'];
+    M1 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
+    M1(1:opt.Np,1:opt.Np) = eye(opt.Np)*sum(v);
+    M2 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
+    M2(1:opt.Np,1:opt.Np) = diag(W(1:opt.Np,3)')*ones(opt.Np);
+    D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes);
+
+else
+    D_ti_alphai = eye(size(W,1));
+end
+
+
+alpha = opt.alpha;
+TR = opt.TR;
 
 for num =1:numel(opt.offsetVecHz):numel(spins)
 
@@ -177,16 +167,7 @@ for num =1:numel(opt.offsetVecHz):numel(spins)
          end
 
      end
-     
-     if opt.optimisation_TR || opt.optimisation_alpha
-
-         spins{num}.gc(opt.Np+1,:) =  differentiation(W,spins{num},opt,'contrainte');
-
-    end
-     
-     
-     
-
+        
 end 
 
 

@@ -6,13 +6,11 @@ function [WGSD] = getWG_epsilon(optimParam,spins,opt)
 
 numerateur = 0;
 
-alpha = getalpha_changementvar(opt,optimParam);
-TR = getTR_changementvar(opt,optimParam);
+alpha = opt.alpha;
+TR = opt.TR;
 
 for p = 1:numel(opt.offsetVecHz):numel(spins) 
     
-    if spins{p}.on_resonnance == false; break; end
-   
     EA = exp(-opt.TA/spins{p}.T1); %ms
     EB = exp(-opt.TB/spins{p}.T1); %ms
 

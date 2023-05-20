@@ -8,17 +8,7 @@ ez = [0 0 0 1]';
 e0 = [1 0 0 0]';
 
 % sum = 0;
-if opt.optimisation_TR
-    if opt.changement_variable_delais
-        v = [W(1:end-1,3)' opt.Nlignes*W(end,3)];
-        M1 = eye(opt.Np+1)*sum(v);
-        M2 = diag(W(1:end,3)')*ones(opt.Np+1);
-        M2(:,end)=opt.Nlignes*M2(:,end);
-        D_ti_alphai = (M1-M2)/(sum(v)^2)*opt.tempsfixe_valeur;
-    else
-        D_ti_alphai = eye(opt.Np+1);
-    end
-else
+
     if opt.changement_variable_delais
         
         v = [W(1:end,3)'];
@@ -31,10 +21,8 @@ else
     else
         D_ti_alphai = eye(size(W,1));
     end
-end 
-
-alpha = getalpha_changementvar(opt,W);
-TR = getTR_changementvar(opt,W);
+alpha = opt.alpha;
+TR = opt.TR;
 
 % cette fction de cout necessite la somme des spins d'un même tissue pour
 % differentes valeurs de w0
@@ -242,11 +230,7 @@ for tissue = 1:opt.N_iso % differents tissus
               
         end % boucle sur les impulsions 
 
-    if (opt.optimisation_TR || opt.optimisation_alpha)&& (spins{num}.saturation == false)
 
-        spins{num}.g(opt.Np+1,:) =  differentiation(W,spins{num},opt,'obj');
-
-    end
     
     end % w0
 end % tissues

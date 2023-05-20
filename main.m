@@ -13,7 +13,7 @@ addpath(genpath('.'));
 
 
 %% initialisation
-[opt,samples] = set_parameters_ss(2);
+[opt,samples] = set_parameters_ss(3);
 opt.Instance = 0;
 [spins, opt, samples] = set_grape_ss(samples,opt);
 time = tic ;

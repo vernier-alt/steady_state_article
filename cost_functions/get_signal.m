@@ -7,8 +7,8 @@ f = opt.Nlignes - ll+1;
 % disp('get_signal');
     EA = exp(-opt.TA/spins.T1); %ms
     EB = exp(-opt.TB/spins.T1); %ms
-    TR = getTR_changementvar(opt,optimParam);
-    alpha = getalpha_changementvar(opt,optimParam);
+    TR = opt.TR;
+    alpha = opt.alpha;
     E1 = exp(-TR/spins.T1); %ms
     K = cos(alpha)*E1; %ms 
 

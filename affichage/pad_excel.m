@@ -2,8 +2,8 @@ function [] = pad_excel(spins,opt,samples,W,signal_acq,dossier,ref)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-alpha = getalpha_changementvar(opt,W);
-TR = getTR_changementvar(opt,W);
+alpha = opt.alpha
+TR = opt.TR;
 
 A ={};
 

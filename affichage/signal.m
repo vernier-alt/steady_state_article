@@ -2,7 +2,7 @@ function [] = signal(optimParam,spins,opt)
 %UNTITLED11 Summary of this function goes here
 %   Detailed explanation goes here
 % données
-TR = getTR_changementvar(opt,optimParam)*10^3;
+TR = opt.TR*10^3;
 T1 = spins.T1*10^3; %ms
 % T2 = spins.T2*10^3 ; % ms 
 
@@ -12,7 +12,7 @@ TB = opt.TB *10^3; %ms
 n = opt.Nlignes ;
 n_cycle = opt.Ncylces;
 
-alpha = getalpha_changementvar(opt,optimParam);
+alpha = opt.alpha;
 
 H_U = [0 0 0 1]*spins.U(:,:,opt.Np)*[1 0 0 0]';
 F_U =  [0 0 0 1]*spins.U(:,:,opt.Np)*[0 0 0 1]';

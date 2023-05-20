@@ -1,7 +1,7 @@
 function [signal_acq] = PSF(optimParam,spins,opt,n_lignes_matrice,delta_f,delta_x,mode,W,ref,dossier)
 
-alpha = getalpha_changementvar(opt,W);
-TR = getTR_changementvar(opt,W);
+alpha = opt.alpha;
+TR = opt.TR;
 
 
 TR = TR*10^3; %ms 

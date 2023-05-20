@@ -5,7 +5,7 @@ opt.N_iso       = max([numel(samples.T1),numel(samples.T2),numel(samples.PD)]);
 s = 1; 
 
 opt.contrainte = (max(samples.saturation)>0) ;
-opt.offsetVecHz = [0 opt.offsetVecHz_out(1:opt.Instance)]; % premier de chaque espèce 
+opt.offsetVecHz = [0]; % no off ressonance implementation in this algorithm
 
 for i = 1:opt.N_iso 
     for k = 1:numel(opt.offsetVecHz)
@@ -30,17 +30,10 @@ for i = 1:opt.N_iso
             iso.max = 1; % max
         end
 
-        if ((samples.saturation(i)== 1) && (opt.offsetVecHz(k)==0))
+        if (samples.saturation(i)== 1)
             iso.saturation = true; % contrainte de saturation
         else
             iso.saturation = false;
-        end
-
-        
-        if (iso.B0_inh ==0) 
-            iso.on_resonnance = true;
-        else
-            iso.on_resonnance = false;
         end
         
         spins{s} = iso; 

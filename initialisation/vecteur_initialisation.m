@@ -322,58 +322,27 @@ elseif opt.Np == 4
   %% 3 Impulsions 
   
     N1 = 20;
-    N2 = 3; % TR différents
-    if opt.optimisation_TR
-        tab_TR = linspace(opt.TRmin,opt.TRmax,N2);
-    else
-        N2 = 1;
-        tab_TR =  [opt.TR];
-    end
-
-    if opt.optimisation_TR || opt.optimisation_alpha
-        initVec = zeros(5,3,100) ;
-    else
-        initVec = zeros(4,3,100) ;
-    end
-  
-  indice = 1;
-  
-  
-  for num_Tr = 1:numel(tab_TR)
-  
-      TR = tab_TR(num_Tr);
-      temps_restant = opt.tempsfixe_valeur - opt.Nlignes*TR;
-      
-      % 0 impulsion
-      % delais
-        initVec(1,3,indice) = temps_restant/4;
-        initVec(2,3,indice) = temps_restant/4;
-        initVec(3,3,indice) = temps_restant/4;
-        initVec(4,3,indice) = temps_restant/4;
-
-        % angles
-        initVec(2,1,indice) = 0;
-        initVec(3,1,indice) = 0;
-        initVec(4,1,indice) = 0;
-
-        % TR
-        if opt.optimisation_TR
-            initVec(opt.Np+1,3,indice) = TR;
-        end
-
-        % angle de bascule 
-        if opt.optimisation_alpha
-            initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-        end
-        
-        indice = indice + 1;
-
-      % 1 impulsion : 180 ou 90 à N1 emplacements
-        temps = linspace(0,temps_restant,N1+2);
-        w1x = [90 180]/(opt.tp*opt.mu)*pi/180;
-        w1y = [0 0]/(opt.tp*opt.mu)*pi/180;
-        for w = 1:2
+    initVec = zeros(4,3,100) ;
+    indice = 1;
+    temps_restant = opt.tempsfixe_valeur - opt.Nlignes*opt.TR;
+    % 0 impulsion
+    % delais
+    initVec(1,3,indice) = temps_restant/4;
+    initVec(2,3,indice) = temps_restant/4;
+    initVec(3,3,indice) = temps_restant/4;
+    initVec(4,3,indice) = temps_restant/4;
+    % angles
+    initVec(2,1,indice) = 0;
+    initVec(3,1,indice) = 0;
+    initVec(4,1,indice) = 0;
+    % 1 impulsion : 180, 45, 90 à N1 emplacements
+    temps = linspace(0,temps_restant,N1+2);
+    w1x = [90 45 180]/(opt.tp*opt.mu)*pi/180;
+    w1y = [0 0 0]/(opt.tp*opt.mu)*pi/180;
+        for w = 1:length(w1x)
             for tps = 2:N1
+                
+                % delays
                 initVec(1,3,indice) = temps(tps);
                 initVec(2,3,indice) = (temps_restant-temps(tps))/3 ;
                 initVec(3,3,indice) = (temps_restant-temps(tps))/3 ;
@@ -382,59 +351,38 @@ elseif opt.Np == 4
                 % angles
                 initVec(2,1,indice) = w1x(w);
                 initVec(2,2,indice) = w1y(w);
-
-                % TR
-                if opt.optimisation_TR
-                    initVec(opt.Np+1,3,indice) = TR;
-                end
-
-                % angle de bascule 
-                if opt.optimisation_alpha
-                    initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                end
                 indice = indice + 1;
             end
         end
 
         % 2 impulsions 
-
         % si 1ere impulsion = 90° (-90° serait pareil) N1 possibilités pour la placer, suivi avec un délais de
         % max 20ms par soit une 90°, soit une -90° , soit 180°
         % à N1 emplacements différents
 
         temps = linspace(0,temps_restant,N1+2);
         w2x = [90 -90 180]/(opt.tp*opt.mu)*pi/180;
-        w2y = [0 0 0]/(opt.tp*opt.mu)*pi/180;
+        w2y = [0 0 0 ]/(opt.tp*opt.mu)*pi/180;
 
-        for w = 1:3
+        for w = 1:length(w2x)
             for tps = 2:N1
                 initVec(1,3,indice) = temps(tps);
                 initVec(2,3,indice) = min(20e-3,temps_restant/(N1+2)) ;
                 initVec(3,3,indice) = (temps_restant-initVec(2,3,indice))/2;
                 initVec(4,3,indice) = (temps_restant-initVec(2,3,indice))/2;
 
-
                 % angles
                 initVec(2,1,indice) = 90/(opt.tp*opt.mu)*pi/180;% 90°
                 initVec(2,2,indice) = 0;
                 initVec(3,1,indice) = w2x(w); %90 ou -90° ou 180°
                 initVec(3,2,indice) = w2y(w);
-
-                % TR
-                if opt.optimisation_TR
-                    initVec(opt.Np+1,3,indice) = TR;
-                end
-
-                % angle de bascule 
-                if opt.optimisation_alpha
-                    initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                end
+                
                 indice = indice + 1;
             end
         end
 
         % si 1ere impulsion = 180°, N1 possibilités pour la placer
-        % la seconde peut être une 90° ou -90° ou 180° sur les emplacements
+        % la seconde peut êopt.TRe une 90° ou -90° ou 180° sur les emplacements
         % restants
         temps = linspace(0,temps_restant,N1+2);
         w2x = [90 -90 180]/(opt.tp*opt.mu)*pi/180;
@@ -455,15 +403,6 @@ elseif opt.Np == 4
                     initVec(3,1,indice) = w2x(w); % 180°, 90°, -90°
                     initVec(3,2,indice) = w2y(w);
 
-                    % TR
-                    if opt.optimisation_TR
-                        initVec(opt.Np+1,3,indice) = TR;
-                    end
-
-                    % angle de bascule 
-                    if opt.optimisation_alpha
-                        initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                    end
                     indice = indice + 1;
                 end
             end
@@ -471,8 +410,8 @@ elseif opt.Np == 4
         
         % 3 impulsions
         % on reprend le schéma précédent
-        % si premiere impulsions 90 - 180 , la troisieme suit avec un délais
-        % de 20ms (car toujours aimantation transverse)
+        % si premiere impulsions 90 - 180 , la opt.troisieme suit avec un délais
+        % de 20ms (car toujours aimantation opt.TRansverse)
         % choix parmi 90 ou -90
         temps = linspace(0,temps_restant,N1+2);
         w3x = [90 -90 ]/(opt.tp*opt.mu)*pi/180;
@@ -494,15 +433,6 @@ elseif opt.Np == 4
                 initVec(4,1,indice) = w3x(w); %90 ou -90° 
                 initVec(4,2,indice) = w3y(w);
 
-                % TR
-                if opt.optimisation_TR
-                    initVec(opt.Np+1,3,indice) = TR;
-                end
-
-                % angle de bascule 
-                if opt.optimisation_alpha
-                    initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                end
                 indice = indice + 1;
             end
         end
@@ -512,7 +442,6 @@ elseif opt.Np == 4
         % est une 180, placé sur les N1-2 places restantes 
         temps = linspace(0,temps_restant,N1+2);
 
-        
         w2x = [90 -90 ]/(opt.tp*opt.mu)*pi/180;
         w2y = [0 0 ]/(opt.tp*opt.mu)*pi/180;
         
@@ -533,15 +462,6 @@ elseif opt.Np == 4
                     initVec(4,1,indice) = 180/(opt.tp*opt.mu)*pi/180;% 180°
                     initVec(4,2,indice) = 0;
 
-                    % TR
-                    if opt.optimisation_TR
-                        initVec(opt.Np+1,3,indice) = TR;
-                    end
-
-                    % angle de bascule 
-                    if opt.optimisation_alpha
-                        initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                    end
                     indice = indice + 1;
                 end
             end
@@ -570,15 +490,6 @@ elseif opt.Np == 4
                         initVec(4,1,indice) = 180/(opt.tp*opt.mu)*pi/180;% 180°
                         initVec(4,2,indice) = 0;
 
-                        % TR
-                        if opt.optimisation_TR
-                            initVec(opt.Np+1,3,indice) = TR;
-                        end
-
-                        % angle de bascule 
-                        if opt.optimisation_alpha
-                            initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                        end
                         indice = indice + 1;
                     end
                 end
@@ -591,7 +502,7 @@ indice
     
 end
 
-end 
+
 
 
 
