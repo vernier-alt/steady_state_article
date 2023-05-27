@@ -173,18 +173,18 @@ elseif opt.Np ==3
   
     N1 = 50;
     N2 = 3; % TR différents
-    if opt.optimisation_TR
-        tab_TR = linspace(opt.TRmin,opt.TRmax,N2);
-    else
+%     if opt.optimisation_TR
+%         tab_TR = linspace(opt.TRmin,opt.TRmax,N2);
+%     else
         N2 = 1;
         tab_TR =  [opt.TR];
-    end
+%     end
 
-    if opt.optimisation_TR || opt.optimisation_alpha
-        initVec = zeros(4,3,100) ;
-    else
+%     if opt.optimisation_TR || opt.optimisation_alpha
+%         initVec = zeros(4,3,100) ;
+%     else
         initVec = zeros(3,3,100) ;
-    end
+%     end
   
   indice = 1;
   
@@ -205,14 +205,14 @@ elseif opt.Np ==3
         initVec(3,1,indice) = 0;
 
         % TR
-        if opt.optimisation_TR
-            initVec(opt.Np+1,3,indice) = TR;
-        end
+%         if opt.optimisation_TR
+%             initVec(opt.Np+1,3,indice) = TR;
+%         end
 
         % angle de bascule 
-        if opt.optimisation_alpha
-            initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-        end
+%         if opt.optimisation_alpha
+%             initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
+%         end
         
         indice = indice + 1;
 
@@ -231,14 +231,14 @@ elseif opt.Np ==3
                 initVec(2,2,indice) = w1y(w);
 
                 % TR
-                if opt.optimisation_TR
-                    initVec(opt.Np+1,3,indice) = TR;
-                end
+%                 if opt.optimisation_TR
+%                     initVec(opt.Np+1,3,indice) = TR;
+%                 end
 
-                % angle de bascule 
-                if opt.optimisation_alpha
-                    initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                end
+%                 % angle de bascule 
+%                 if opt.optimisation_alpha
+%                     initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
+%                 end
                 indice = indice + 1;
             end
         end
@@ -266,14 +266,14 @@ elseif opt.Np ==3
                 initVec(3,2,indice) = w2y(w);
 
                 % TR
-                if opt.optimisation_TR
-                    initVec(opt.Np+1,3,indice) = TR;
-                end
+%                 if opt.optimisation_TR
+%                     initVec(opt.Np+1,3,indice) = TR;
+%                 end
 
                 % angle de bascule 
-                if opt.optimisation_alpha
-                    initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                end
+%                 if opt.optimisation_alpha
+%                     initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
+%                 end
                 indice = indice + 1;
             end
         end
@@ -300,14 +300,14 @@ elseif opt.Np ==3
                     initVec(3,2,indice) = w2y(w);
 
                     % TR
-                    if opt.optimisation_TR
-                        initVec(opt.Np+1,3,indice) = TR;
-                    end
+%                     if opt.optimisation_TR
+%                         initVec(opt.Np+1,3,indice) = TR;
+%                     end
 
                     % angle de bascule 
-                    if opt.optimisation_alpha
-                        initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
-                    end
+%                     if opt.optimisation_alpha
+%                         initVec(opt.Np+1,1,indice) = min(max(opt.alphamin,acos(1.001*opt.Kmin*exp(+TR/samples.T1(1)))),opt.alphamax);
+%                     end
                     indice = indice + 1;
                 end
             end

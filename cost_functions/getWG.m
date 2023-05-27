@@ -1,10 +1,8 @@
 function [WGSD] = getWG(optimParam,spins,opt)
 %UNTITLED9 Summary of this function goes here
-%   Detailed explanation goes here
+%  C = - |Mmax| + | Mmin| 
 
-% EXP
-numerateur = 0;
-denominateur = 0;
+WGSD = 0;
 
 for p = 1:numel(spins) 
     
@@ -21,29 +19,29 @@ for p = 1:numel(spins)
 
     % STEADY - STATE 
 
-        A = spins.Mt0(end)*((1-EB)+( (1-E1)*(1-K^opt.Nlignes)/(1-K)+K^opt.Nlignes*(1-EA))*EB);
-        lambda = K^opt.Nlignes*EA*EB;
+    A = spins.Mt0(end)*((1-EB)+( (1-E1)*(1-K^opt.Nlignes)/(1-K)+K^opt.Nlignes*(1-EA))*EB);
+    lambda = K^opt.Nlignes*EA*EB;
 
-        s = spins.Mt0(end)*(1-E1)/(1-K);
+    s = spins.Mt0(end)*(1-E1)/(1-K);
 
-        ss = ((A + lambda*H_U)/(1-lambda*F_U ));
+    ss = ((A + lambda*H_U)/(1-lambda*F_U ));
 
-        ss_EB = (ss -(1-EB))/EB;
+    ss_EB = (ss -(1-EB))/EB;
+
+    for j =1:numel(opt.vec)
         
-        for j =1:numel(opt.vec)
-            f = opt.Nlignes - opt.vec(j); 
-            if (spins{p}.max == -1)
-                numerateur = numerateur +abs((s + (ss_EB - s ) * K^(-f))*exp(-opt.TE/spins{p}.T2)*sin(optimParam(end,1)));
-    %             denominateur = denominateur + abs((s + (ss_EB - s ) * K^(-floor(opt.Nlignes*opt.coeff)))*exp(-0.004/spins{p}.T2)*sin(optimParam(end,1)));
-            else     
-                numerateur = numerateur -abs((s + (ss_EB - s ) * K^(-f))*exp(-opt.TE/spins{p}.T2)*sin(optimParam(end,1)));
-    %             denominateur = denominateur+abs((s + (ss_EB - s ) * K^(-floor(opt.Nlignes*opt.coeff)))*exp(-0.004/spins{p}.T2)*sin(optimParam(end,1)));
-            end
+        f = opt.Nlignes - opt.vec(j); 
+        
+        if (spins{p}.max == -1)
             
-        end
-end
+            WGSD = WGSD +abs((s + (ss_EB - s ) * K^(-f))*exp(-opt.TE/spins{p}.T2)*sin(optimParam(end,1)));
 
-WGSD = numerateur;
-% W= (denominateur +denominateur)/2;
+        else     
+            WGSD = WGSD -abs((s + (ss_EB - s ) * K^(-f))*exp(-opt.TE/spins{p}.T2)*sin(optimParam(end,1)));
+
+        end
+
+    end
+end
 
 end

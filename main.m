@@ -2,18 +2,17 @@ close all
 clear all
 ref = 0;
 dossier = 'segments\';
-% dbstop if naninf
-% DEUX ESPECES 
+
 
 %% Add path
-
-cd('C:\Users\vernier\Documents\MATLAB\steady-state\grapeSteadyState _deuxespeces_article');  
+% create en environnement variable for the local folder
+cd(getenv('ENV_VAR_OCMPRAGE'));  
 addpath(genpath('.'));
 
-
-
 %% initialisation
-[opt,samples] = set_parameters_ss(3);
+% number of excitation pulses :
+nb = 2;
+[opt,samples] = set_parameters_ss(nb);
 opt.Instance = 0;
 [spins, opt, samples] = set_grape_ss(samples,opt);
 time = tic ;
@@ -99,7 +98,7 @@ saveas(h, strcat(dossier,sprintf('%d_signal.png',ref)));
 Delta_f = 50; % bandwith per pixel
 Delta_x = 1.172;
 
-signal_acq = PSF(opt.W_ini,spins,opt,256,Delta_f,Delta_x,'centric',opt.W_ini,ref,dossier);
+signal_acq = PSF(opt.W_ini,spins,opt,300,Delta_f,Delta_x,'centric',opt.W_ini,ref,dossier);
 pad_excel(spins,opt,samples,opt.W_ini,signal_acq,dossier,ref)
 
 
