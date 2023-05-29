@@ -10,8 +10,8 @@ couleur  = ["#7E2F8E"; "#EDB120" ;"#77AC30";"#D95319"];
 
 % graisse,
 
-valeurs_T1 = linspace(0.05,5000e-3,50);
-valeurs_T2 = linspace(0.005,2500e-3,50);
+valeurs_T1 = linspace(0.05,2000e-3,50);
+valeurs_T2 = linspace(0.005,200e-3,50);
 % 
 % valeurs_T1 = linspace(0.05,2500e-3,50);
 % valeurs_T2 = linspace(0.005,150e-3,50);
@@ -87,9 +87,9 @@ k = figure;
     ylabel('T2 ms');
     hold on
 
-    for j = 1:opt_Niso_memory
-            num = (j-1)*numel(opt.offsetVecHz) + 1 ;
-            scatter(spins_memoire{num}.T1*10^3,spins_memoire{num}.T2*10^3,100,'filled','MarkerFaceColor',couleur(j));
+    for num = 1:opt_Niso_memory
+
+            scatter(spins_memoire{num}.T1*10^3,spins_memoire{num}.T2*10^3,100,'filled','MarkerFaceColor',couleur(num));
             hold on
 %          end
     end 

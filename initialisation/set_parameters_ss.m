@@ -9,7 +9,7 @@ samples.T2 = [27 34]*10^-3;
 samples.PD = [1 1];
 % tissue to be maximized (1) and minimized (0)
 samples.maxi = [1 0];
-% tissue to be satrurated by constraint (1), (0) otherwise
+% tissue to be saturated by constraint (1), (0) otherwise
 samples.saturation = [0 1];
 % Cost
 opt.costFunction = '@getWG_epsilon_moins';%'@getWG_epsilon''@getWG'; % '@getCO'
@@ -36,8 +36,8 @@ opt.mu = 1000; % b = mu * optparam, si mu trop grand, optparam trop petit, gradi
 % Les paramètres d'acquisition
 opt.TR = 6e-3; % Sinon voici le TR
 opt.alpha = 13*pi/180;% Sinon voici le alpha 
-opt.Nlignes = 75;%64
-opt.Ncylces = 30;% graphique
+opt.Nlignes = 64; %64 % lines per cycle to fill a slice
+opt.Ncylces = 4;
 
 % matrix treatment
 opt.mode= 'exp'; %'exp';'exact
@@ -52,25 +52,17 @@ opt.TE = 3.2e-3;
 opt.TA = 0e-3 ; % ms
 opt.TB =0e-3 ; %ms
 
-
 opt.vec = [1];
 opt.line_for_constrained_saturation = 1;
 opt.spin2sature = 2; 
 
 opt.initVec  = vecteur_initialisation(opt,samples);
-
-% if strcmp(opt.mode,'exact')
-%     opt.propaFunction = '@propaFunction_ss_exact'; % '@propaFunction_ss'; % 'propafunction_ss_exact'
-%     opt.gradFunction = '@getGrad_ss_exact'; % '@GetGrad_ss'
-%     opt.gradFunction = '@getGrad_ss_exact'; % '@GetGrad_ss'
-%     opt.contrainteFunction = '@getcontrainteMz';
-% else
-    opt.propaFunction = '@propaFunction_ss'; % '@propaFunction_ss'; % 'propafunction_ss_exact'
-    opt.gradFunction = '@getGrad_ss'; % '@GetGrad_ss'
-    opt.contrainteFunction = '@getcontrainteMz';
-% end 
+opt.gradFunction = '@getGrad_ss'; 
+opt.propaFunction = '@propaFunction_ss';
+opt.contrainteFunction = '@getcontrainteMz';
 
 if strcmp(opt.mode,'exact')
+    opt.propaFunction = '@propafunction_ss';
     opt.initVec = convert2anglephase(opt.initVec,opt);
 end
 

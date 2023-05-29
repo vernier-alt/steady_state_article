@@ -10,7 +10,7 @@ TA = opt.TA *10^3; % ms
 TB = opt.TB *10^3; %ms
 
 n = opt.Nlignes ;
-n_cycle = opt.Ncylces;
+n_cycle = 30;
 
 alpha = opt.alpha;
 

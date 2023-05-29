@@ -6,7 +6,7 @@ function [contrainte] = getcontrainteMz(optimParam,spins,opt,f)
 alpha = opt.alpha;
 TR = opt.TR;
 i = 1;
-for p = 1:numel(opt.offsetVecHz):numel(spins) 
+for p = 1:numel(spins) 
     
     EA = exp(-opt.TA/spins{p}.T1); %ms
     EB = exp(-opt.TB/spins{p}.T1); %ms

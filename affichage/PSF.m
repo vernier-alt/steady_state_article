@@ -1,18 +1,10 @@
 function [signal_acq] = PSF(optimParam,spins,opt,n_lignes_matrice,delta_f,delta_x,mode,W,ref,dossier)
 
 alpha = opt.alpha;
-TR = opt.TR;
-
-
-TR = TR*10^3; %ms 
+TR = opt.TR*10^3; %ms 
 TA = opt.TA *10^3; % ms
 TB = opt.TB *10^3; %ms
 
-% if strcmp(mode,'centric')
-%     rapport = n_lignes_matrice/opt.Nlignes;
-%     centre_kspace = floor(
-%     order = [
-% end 
 rapport = n_lignes_matrice/opt.Nlignes;
 signal_acq = ones(numel(spins),n_lignes_matrice,1);
 centre_kspace = floor(n_lignes_matrice/2);
@@ -31,9 +23,6 @@ for num=1:numel(spins)
     T2 = spins{num}.T2*10^3 ; % ms 
 
     n = opt.Nlignes ;
-    n_cycle = opt.Ncylces;
-
-
 
     H_U = [0 0 0 1]*spins{num}.U(:,:,opt.Np)*[1 0 0 0]';
     F_U =  [0 0 0 1]*spins{num}.U(:,:,opt.Np)*[0 0 0 1]';

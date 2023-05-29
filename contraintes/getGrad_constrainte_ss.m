@@ -26,7 +26,7 @@ end
 alpha = opt.alpha;
 TR = opt.TR;
 
-for num =1:numel(opt.offsetVecHz):numel(spins)
+for num =1:numel(spins)
 
  
      if spins{num}.saturation == true
@@ -146,24 +146,7 @@ for num =1:numel(opt.offsetVecHz):numel(spins)
 
          end
          
-%          
-%         A_0 = spins{p}.U(:,:,opt.Np);
-% 
-%         no1 = p+1 ;
-%         no2 = p+numel(opt.offsetVecHz)-1 ;
-% 
-%         for p_out = no1:no2 
-% 
-%             if spins{p_out}.on_resonnance == true
-%                 break;
-%             end
-% 
-%             A_out = spins{p_out}.U(:,:,opt.Np);
-% %             contrainte(i) = (A_0*ez)'*(A_out*ez)/ ((A_0*ez)'*(A_0*ez))-0.8;
-%               contrainte(i) = 0.9*(A_0*ez)'*(A_0*ez)   - (A_0*ez)'*(A_out*ez);
-%             i = i+1;
-%             end
-%  
+
          end
 
      end
@@ -172,12 +155,9 @@ end
 
 
 
-% spins{num}.gc(:,3) = D_ti_alphai*spins{num}.gc(:,3);
-
-
 % Jcontrainte = 0 ; % Jacobienne (possiblement plusieurs contraintes )
 j = 1;
-for num = 1:numel(opt.offsetVecHz):numel(spins)
+for num = 1:numel(spins)
     if spins{num}.saturation == true 
          spins{num}.gc(:,end) =  D_ti_alphai'*spins{num}.gc(:,end);
          if strcmp(opt.mode,'exp') % B1xB1y

@@ -1,59 +1,29 @@
 function g = getGrad_ss(W,spins,opt)
 
-% Compute gradient dC/dw with complex differentiation (see M. Lapert paper)
+% Compute gradient dC/dw with complex differentiation 
 
 EXPMAT  = str2func(opt.expmFunction) ;   
 
 ez = [0 0 0 1]';
 e0 = [1 0 0 0]';
 
-% sum = 0;
 
-    if opt.changement_variable_delais
-        
-        v = [W(1:end,3)'];
-        M1 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
-        M1(1:opt.Np,1:opt.Np) = eye(opt.Np)*sum(v);
-        M2 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
-        M2(1:opt.Np,1:opt.Np) = diag(W(1:opt.Np,3)')*ones(opt.Np);
-        D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes);
+if opt.changement_variable_delais
+    v = [W(1:end,3)'];
+    M1 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
+    M1(1:opt.Np,1:opt.Np) = eye(opt.Np)*sum(v);
+    M2 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
+    M2(1:opt.Np,1:opt.Np) = diag(W(1:opt.Np,3)')*ones(opt.Np);
+    D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes);
 
-    else
-        D_ti_alphai = eye(size(W,1));
-    end
+else
+    D_ti_alphai = eye(size(W,1));
+end
+
 alpha = opt.alpha;
 TR = opt.TR;
 
-% cette fction de cout necessite la somme des spins d'un même tissue pour
-% differentes valeurs de w0
-somme = zeros(opt.N_iso,1);
-if strcmp('@getWG_epsilon_B0',opt.costFunction)
-    for tissue = 1:opt.N_iso % differents tissus
-        for W0 = 1:numel(opt.offsetVecHz)
-            num = (tissue - 1)*numel(opt.offsetVecHz) + W0;
-            if (spins{num}.saturation == false) % pas besoin de calculer pour les spins a saturer
-                EA = exp(-opt.TA/spins{num}.T1); %ms
-                EB = exp(-opt.TB/spins{num}.T1); %ms
-                E1 = exp(-TR/spins{num}.T1); %ms
-                K = cos(alpha)*E1; %ms 
-                A = spins{num}.Mt0(end)*((1-EB)+( (1-E1)*(1-K^opt.Nlignes)/(1-K)+K^opt.Nlignes*(1-EA))*EB);
-                lambda = K^opt.Nlignes*EA*EB;
-                s = spins{num}.Mt0(end)*(1-E1)/(1-K);
-                H_U = [0 0 0 1]*spins{num}.U(:,:,opt.Np)*e0;
-                F_U = [0 0 0 1]*spins{num}.U(:,:,opt.Np)*[0 0 0 1]';
-                somme(tissue) = somme(tissue) + (s + ( ((A + lambda*H_U)/(1-lambda*F_U)*(EB^-1)-(EB^-1 - 1))-s)*K^(-(opt.Nlignes-opt.vec+1)))*(exp(-opt.TE/spins{num}.T2)*sin(alpha));
-            end
-        end
-    end
-end
-
-% for num =1:numel(opt.offsetVecHz):numel(spins)
-% for num =1:numel(spins)
-for tissue = 1:opt.N_iso % differents tissus
-    for W0 = 1:numel(opt.offsetVecHz)
-        
-        num = (tissue - 1)*numel(opt.offsetVecHz) + W0;
-        
+for num = 1:opt.N_iso % differents tissus
         ez_it = [0 0 0 1]';
         EA = exp(-opt.TA/spins{num}.T1); %ms
         EB = exp(-opt.TB/spins{num}.T1); %ms
@@ -147,129 +117,67 @@ for tissue = 1:opt.N_iso % differents tissus
                 end
 
             end 
-    %      if   strcmp('@getCO',opt.costFunction) 
-    %          
-    %          temp = 0;
-    %          gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
-    %          for j =1:numel(opt.vec)
-    %         
-    %              if (spins{num}.max == -1)&& (spins{num}.saturation == false)
-    % 
-    %                      temp = temp + opt.sat*2*signal(j)*gradS*fact(j);
-    % 
-    % 
-    %              elseif  (spins{num}.saturation == false)
-    %   
-    %                     temp = temp + 2*signal(j)*gradS*fact(j);
-    % 
-    %              end 
-    %          end
-    %          spins{num}.g(p,:) = temp;
-    %          
-              if   strcmp('@getWG_epsilon',opt.costFunction) 
 
-                 temp = 0;
-                 gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
-                 D_norme = signal*power(opt.epsilon_abs^2 + signal.^2,-0.5);
+          if   strcmp('@getWG_epsilon',opt.costFunction) 
 
-                 for j =1:numel(opt.vec)
+             temp = 0;
+             gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
+             D_norme = signal*power(opt.epsilon_abs^2 + signal.^2,-0.5);
 
-                     if (spins{num}.max == -1)&& (spins{num}.saturation == false)
+             for j =1:numel(opt.vec)
 
-                             temp = temp + opt.sat*D_norme(j)*gradS*fact(j);
+                 if (spins{num}.max == -1)&& (spins{num}.saturation == false)
+
+                         temp = temp + opt.sat*D_norme(j)*gradS*fact(j);
 
 
-                     elseif  (spins{num}.saturation == false)
+                 elseif  (spins{num}.saturation == false)
 
-                            temp = temp + D_norme(j)*gradS*fact(j);
+                        temp = temp + D_norme(j)*gradS*fact(j);
 
-                     end 
+                 end 
 
-                 end
+             end
 
-                 spins{num}.g(p,:) = temp;
+             spins{num}.g(p,:) = temp;
 
-              elseif strcmp('@getWG_epsilon_moins',opt.costFunction)
+           elseif strcmp('@getWG_epsilon_moins',opt.costFunction)
                  
-                 temp = 0;
-                 gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
-                 D_norme = signal*power(opt.epsilon_abs^2 + signal.^2,-0.5);
+             temp = 0;
+             gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
+             D_norme = signal*power(opt.epsilon_abs^2 + signal.^2,-0.5);
 
-                 for j =1:numel(opt.vec)
+             for j =1:numel(opt.vec)
 
-                     if (spins{num}.max == -1)&& (spins{num}.saturation == false)
+                 if (spins{num}.max == -1)&& (spins{num}.saturation == false)
 
-                             temp = temp + opt.sat*D_norme(j)*gradS*fact(j);
+                         temp = temp + opt.sat*D_norme(j)*gradS*fact(j);
 
 
-                     elseif  (spins{num}.saturation == false)
+                 elseif  (spins{num}.saturation == false)
 
-                            temp = temp + gradS*fact(j);
+                        temp = temp + gradS*fact(j);
 
-                     end 
+                 end 
 
-                 end
+             end
 
-                 spins{num}.g(p,:) = temp;
-                  
-              elseif strcmp('@getWG_epsilon_B0',opt.costFunction)
-                  temp = 0;
-                  gradS = ((A + lambda*H_U)/((1-lambda*F_U)^2)*lambda*spins{num}.gf(p,:) + lambda/(1-lambda*F_U)*spins{num}.gh(p,:)); % gradient du steady-state 
-                  for j =1:numel(opt.vec)
+             spins{num}.g(p,:) = temp;
 
-                     if (spins{num}.max == -1)&& (spins{num}.saturation == false)
-                             temp = temp + opt.sat*gradS*fact(j);
-                     elseif  (spins{num}.saturation == false)
-                            temp = temp + gradS*fact(j);
-                     end 
-
-                  end % boucle sur les
-                  spins{num}.g(p,:) = temp;
-                  
-              end % fonctions de cout
+          end % cost function
               
-        end % boucle sur les impulsions 
-
-
-    
-    end % w0
-end % tissues
-
-g= 0;% Compute final gradient
-
-if strcmp('@getWG_epsilon_B0',opt.costFunction)
-
-    for tissue = 1:opt.N_iso % differents tissues
+        end % pulses
         
-        temp = 0;
-        for W0 = 1:numel(opt.offsetVecHz)
-            
-            num = (tissue - 1)*numel(opt.offsetVecHz) + W0;
-            if (spins{num}.saturation == false)
-                temp =  temp +  spins{num}.g;
-            end
-            
-        end
-        grad = somme(tissue)*power(opt.epsilon_abs^2 + somme(tissue).^2,-0.5)*temp;  % somme/sqrt(somme +e2)*Dsomme
-        if (spins{num}.max == -1)&& (spins{num}.saturation == false)
-            g = g + opt.sat*grad;
-        elseif (spins{num}.saturation == false)
-            g = g - grad;
-        end
+end % tissues
+g = 0;
+for num =1:numel(spins)   
+    if (spins{num}.max == -1)&& (spins{num}.saturation == false)
+        g =  g +  spins{num}.g;
+    elseif (spins{num}.saturation == false)
+        g =  g -  spins{num}.g;
     end
-    
-else
-
-    for num =1:numel(opt.offsetVecHz):numel(spins)   
-        if (spins{num}.max == -1)&& (spins{num}.saturation == false)
-            g =  g +  spins{num}.g;
-        elseif (spins{num}.saturation == false)
-            g =  g -  spins{num}.g;
-        end
-    end
-    
 end
-
+    
 g(:,end) =  D_ti_alphai'*g(:,end);
  
 if strcmp(opt.mode,'exp') % B1xB1y
