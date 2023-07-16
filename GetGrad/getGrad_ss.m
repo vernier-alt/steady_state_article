@@ -8,13 +8,13 @@ ez = [0 0 0 1]';
 e0 = [1 0 0 0]';
 
 
-if opt.changement_variable_delais
+if opt.changement_of_variable
     v = [W(1:end,3)'];
     M1 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
     M1(1:opt.Np,1:opt.Np) = eye(opt.Np)*sum(v);
     M2 = zeros(size(W,1));% au cas ou on optimiserait alpha et pas TR
     M2(1:opt.Np,1:opt.Np) = diag(W(1:opt.Np,3)')*ones(opt.Np);
-    D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes);
+    D_ti_alphai = (M1-M2)/(sum(v)^2)*(opt.time_of_a_segment-opt.TR*opt.Nlignes);
 
 else
     D_ti_alphai = eye(size(W,1));

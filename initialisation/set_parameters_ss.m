@@ -3,24 +3,47 @@ function [opt,samples] = set_parameters_ss(k)
 %   Detailed explanation goes here
 
 % Relaxation times of the target tissues in the same order
-samples.T1 = [1500 1800]*10^-3; 
-samples.T2 = [27 34]*10^-3;
-% Proton density of the target tissues in the same order
-samples.PD = [1 1];
-% tissue to be maximized (1) and minimized (0)
-samples.maxi = [1 0];
-% tissue to be saturated by constraint (1), (0) otherwise
-samples.saturation = [0 1];
-% Cost
-opt.costFunction = '@getWG_epsilon_moins';%'@getWG_epsilon''@getWG'; % '@getCO'
+% T1 : 1450 923 4200 % GM, WM, CSF
+% T2 : 96 70 2000
+% PD : 0.75 0.65 1
 
-opt.saturation_tolerance = 0.0001; % tolerance 0.001 c'est bien
-opt.Np = k+1; % linked to the number of variables to opimize
-opt.tp     = 1e-3;%1e-3; % pulse duration (in ms)
+%samples.T1 = [1450 923]*10^-3; % GM, WM
+%samples.T2 = [96 70]*10^-3;
+%samples.PD = [0.75 0.65];
+%samples.maxi = [0 1];
+%samples.saturation = [1 0];
+
+samples.T1 = [1450 923 4200]*10^-3; % GM, WM, CSF
+samples.T2 = [96 70 2000]*10^-3;
+samples.PD = [0.75 0.65 1]; % Proton density of the target tissues in the same order
+% tissue to be maximized (1) and minimized (0)
+samples.maxi = [1 0 0];
+% tissue to be saturated by constraint (1), (0) otherwise
+samples.saturation = [0 1 1];
+
+
+
+% Cost
+opt.costFunction = '@getWG_epsilon';%'@getWG_epsilon_moins'
+opt.vec = [1]; % Possibilities to take into account multiple lines in the cost function, here if opt.vec = [1] it is only the first line in the train of acquisitions
+opt.line_for_constrained_saturation = 1;
+
+opt.saturation_tolerance = 0.0001;  % replace
+opt.Np = k+1; % linked to the number of variables to optimize
+opt.tp     = 1e-3; % pulse duration (in ms)
 opt.expmFunction        = '@expmdemo1';
 
-opt.sat = 1; % pour getCO, if no strict constraint can put a weight
-opt.epsilon_abs = 10^-5; % pour wg_epsilon
+opt.sat = 1; %  if no strict constraint can put a weight in replace of forced constraint
+opt.epsilon_abs = 10^-5; % for wg_epsilon
+
+% Acquisition Parameters
+opt.TR = 6e-3; % (s) TR
+opt.alpha = 12*pi/180;% (rad) flip angle GRE acquisitions 
+opt.Nlignes = 64; %64 lines filled per cycle 
+opt.Ncylces = 4; %number of cycles to fill a slide
+
+% Time constraint
+opt.time_of_a_segment = (5000)*10^-3; % (s)
 
 %% For Grape
 opt.TolX                = 1e-15 ; % Step Tolerance
@@ -30,31 +53,18 @@ opt.displayIter = 'iter' ;
 opt.optimFunction       = 'fmincon';
 
 % Change of variable
-opt.changement_variable_delais = true ; % si changement de variable, on conserve une contrainte d'inégalité si TR min
-opt.mu = 1000; % b = mu * optparam, si mu trop grand, optparam trop petit, gradient élevé ereur de derivative check
-
-% Les paramètres d'acquisition
-opt.TR = 6e-3; % Sinon voici le TR
-opt.alpha = 13*pi/180;% Sinon voici le alpha 
-opt.Nlignes = 64; %64 % lines per cycle to fill a slice
-opt.Ncylces = 4;
+opt.changement_of_variable = true ; 
+opt.mu = 1000; % b1 = mu * optparam (linear scaling of the optimized b1 values, optparam )
 
 % matrix treatment
 opt.mode= 'exp'; %'exp';'exact
 
-% contrainte de temps
-opt.tempsfixe_valeur = (3000)*10^-3;
-
-% bornes
+% limit
 opt.Wmax   = pi/(opt.tp)/opt.mu ;
-%% sert plus à rien la plus part du temps
+%to be suppress in the future
 opt.TE = 3.2e-3;
 opt.TA = 0e-3 ; % ms
 opt.TB =0e-3 ; %ms
-
-opt.vec = [1];
-opt.line_for_constrained_saturation = 1;
-opt.spin2sature = 2; 
 
 opt.initVec  = vecteur_initialisation(opt,samples);
 opt.gradFunction = '@getGrad_ss'; 

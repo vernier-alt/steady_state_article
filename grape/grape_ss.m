@@ -21,7 +21,7 @@ if strcmp(opt.optimFunction,'fmincon')
         'GradObj','on',... // specify objective gradient 
         'Gradconstr','on',...// specify constraint gradient 
         'Hessian',{'lbfgs',5},...  
-        'DerivativeCheck','off',...
+        'DerivativeCheck','on',...
         'AlwaysHonorConstraints','none');  
     
     lbound = zeros(size(opt.W_ini)) ; %lower amplitude constraint 
@@ -54,12 +54,12 @@ if strcmp(opt.optimFunction,'fmincon')
     % vector (let's call it W)
     % of mxn lines, each column is put under the previous one
     % linear constraint is : A*W = 0 or A*W <=0 if tolerance
-    Tmin = 10e-3; % minimum duration for the last delay of the preparation
-    if opt.changement_variable_delais 
+    Tmin = 70e-3; % minimum duration for the last delay of the preparation
+    if opt.changement_of_variable
         ll = size(opt.W_ini,1);
         A = zeros(1,ll*3);
         b = zeros(1,1);
-        A(1,end) = -(opt.tempsfixe_valeur-opt.Nlignes*opt.TR) + Tmin;
+        A(1,end) = -(opt.time_of_a_segment-opt.Nlignes*opt.TR) + Tmin;
         A(1,ll*2+1:end-1) = Tmin;
         lbound(1:opt.Np,3) = 1e-3; % Optimized variables must be positive, to be too much close to zero may cause numerical problems (divisions in the conversion)
         ubound(1:opt.Np,3) = inf;
@@ -70,7 +70,7 @@ if strcmp(opt.optimFunction,'fmincon')
         ubound(1:opt.Np,3) = inf;
         A = zeros(1,size(opt.W_ini,1)*3);
         A(1,end-opt.Np+1:end) = 1;
-        b = opt.tempsfixe_valeur-opt.Nlignes*opt.TR ;
+        b = opt.time_of_a_segment-opt.Nlignes*opt.TR ;
         W = fmincon(@getCost,opt.W_ini,[],[],A,b,lbound,ubound,nonlcon,optionsFmincon,spins,opt)   ; % equality on the sum of the delay 
     end
 end

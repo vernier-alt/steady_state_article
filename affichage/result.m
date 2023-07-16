@@ -6,8 +6,8 @@ for i=1:opt.Np
     ordre=union(ordre,sprintf('%d',i));
 end
 
-if opt.changement_variable_delais
-    Delay_ms=opt.W_ini(1:opt.Np,3)*10^3*(opt.tempsfixe_valeur-opt.TR*opt.Nlignes)/(sum(opt.W_ini(1:opt.Np,3)));
+if opt.changement_of_variable
+    Delay_ms=opt.W_ini(1:opt.Np,3)*10^3*(opt.time_of_a_segment-opt.TR*opt.Nlignes)/(sum(opt.W_ini(1:opt.Np,3)));
     TR = opt.TR*10^3;
 else
     Delay_ms=opt.W_ini(1:opt.Np,3)*10^3;

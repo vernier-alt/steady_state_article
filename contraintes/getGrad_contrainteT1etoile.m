@@ -19,7 +19,7 @@ end
 
 %% Changement variable 
 if opt.optimisation_TR
-    if opt.changement_variable_delais
+    if opt.changement_of_variable
         v = [W(1:end-1,3)' opt.Nlignes*W(end,3)];
         M1 = eye(opt.Np+1)*sum(v);
         M2 = diag(W(1:end,3)')*ones(opt.Np+1);
@@ -29,7 +29,7 @@ if opt.optimisation_TR
         D_ti_alphai = eye(opt.Np+1);
     end
 else
-    if opt.changement_variable_delais
+    if opt.changement_of_variable
         
         v = [W(1:end,3)'];
         M1 = eye(size(W,1))*sum(v);

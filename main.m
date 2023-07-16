@@ -3,15 +3,21 @@ clear all
 ref = 0;
 dossier = 'segments\';
 
-
 %% Add path
 % create en environnement variable for the local folder
-cd(getenv('ENV_VAR_OCMPRAGE'));  
+my_path = getenv('ENV_VAR_OCMPRAGE');
+if (isempty(my_path)) 
+    msgbox("Create a path for the environement variable ENV_VAR_OCMPRAGE to store results files. (Close/Reopen Matlab)");
+    return;
+else 
+    cd(my_path);
+end
+
 addpath(genpath('.'));
 
-%% initialisation
+%% initialization
 % number of excitation pulses :
-nb = 2;
+nb = 3;
 [opt,samples] = set_parameters_ss(nb);
 opt.Instance = 0;
 [spins, opt, samples] = set_grape_ss(samples,opt);

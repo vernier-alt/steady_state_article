@@ -27,7 +27,7 @@ end
 
 A = horzcat(A,{' '});
 A = horzcat(A,opt.Np-1);
-A = horzcat(A,opt.tempsfixe_valeur*10^3);
+A = horzcat(A,opt.time_of_a_segment*10^3);
 A = horzcat(A,opt.Nlignes);
 A = horzcat(A,TR*10^3);
 A = horzcat(A,alpha*180/pi);

@@ -27,7 +27,7 @@ opt_Niso_memory = opt.N_iso;
     for k=1:numel(valeurs_T2)
         for i=1:numel(valeurs_T1)
 
-            if opt.tempsfixe_valeur < 0
+            if opt.time_of_a_segment < 0
                 disp('error');
             end 
             samples.T2 = [valeurs_T2(k)];
