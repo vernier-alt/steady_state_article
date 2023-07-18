@@ -3,15 +3,22 @@ function [] = cartographie(W,spins,opt,ref,dossier)
 %   Detailed explanation goes here
 DYN             = str2func( opt.propaFunction ) ;
 
+T1tab = [];
+T2tab = [];
+for i = 1:numel(spins)
+    T1tab = horzcat(T1tab, spins{i}.T1);
+    T2tab = horzcat(T2tab, spins{i}.T2);
+end 
 
-% valeurs_T1 = linspace(0.05,1.2*max(max(spins{1}.T1,spins{2}.T1),spins{3}.T1),50);
-% valeurs_T2 = linspace(0.005,500e-3,50);
+
 couleur  = ["#7E2F8E"; "#EDB120" ;"#77AC30";"#D95319"];
 
 % graisse,
 
-valeurs_T1 = linspace(0.05,2000e-3,50);
-valeurs_T2 = linspace(0.005,200e-3,50);
+valeurs_T1 = linspace(0.05,1.2*max(T1tab),50);
+valeurs_T2 = linspace(0.005,1.2*max(T2tab),50);
+% valeurs_T1 = linspace(0.05,2000e-3,50);
+% valeurs_T2 = linspace(0.005,200e-3,50);
 % 
 % valeurs_T1 = linspace(0.05,2500e-3,50);
 % valeurs_T2 = linspace(0.005,150e-3,50);

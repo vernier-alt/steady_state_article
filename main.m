@@ -17,7 +17,7 @@ addpath(genpath('.'));
 
 %% initialization
 % number of excitation pulses :
-nb = 3;
+nb = 1;
 [opt,samples] = set_parameters_ss(nb);
 opt.Instance = 0;
 [spins, opt, samples] = set_grape_ss(samples,opt);

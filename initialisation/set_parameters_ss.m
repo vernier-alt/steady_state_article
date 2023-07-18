@@ -7,19 +7,19 @@ function [opt,samples] = set_parameters_ss(k)
 % T2 : 96 70 2000
 % PD : 0.75 0.65 1
 
-%samples.T1 = [1450 923]*10^-3; % GM, WM
-%samples.T2 = [96 70]*10^-3;
-%samples.PD = [0.75 0.65];
-%samples.maxi = [0 1];
-%samples.saturation = [1 0];
+samples.T1 = [1450 923]*10^-3; % GM, WM
+samples.T2 = [96 70]*10^-3;
+samples.PD = [0.75 0.65];
+samples.maxi = [0 1];
+samples.saturation = [1 0];
 
-samples.T1 = [1450 923 4200]*10^-3; % GM, WM, CSF
-samples.T2 = [96 70 2000]*10^-3;
-samples.PD = [0.75 0.65 1]; % Proton density of the target tissues in the same order
-% tissue to be maximized (1) and minimized (0)
-samples.maxi = [1 0 0];
-% tissue to be saturated by constraint (1), (0) otherwise
-samples.saturation = [0 1 1];
+% samples.T1 = [1450 923 4200]*10^-3; % GM, WM, CSF
+% samples.T2 = [96 70 2000]*10^-3;
+% samples.PD = [0.75 0.65 1]; % Proton density of the target tissues in the same order
+% % tissue to be maximized (1) and minimized (0)
+% samples.maxi = [1 0 0];
+% % tissue to be saturated by constraint (1), (0) otherwise
+% samples.saturation = [0 1 1];
 
 
 

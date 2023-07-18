@@ -66,8 +66,13 @@ for k = 1:numel(spins)
     A = horzcat(A,sum(signal_acq(k,:)));
 end 
 
-fichier = strcat(dossier,'donnees.xlsx');
-xlsappend(fichier,A);
+fullfilename = strcat(dossier,'donnees.xlsx');
+
+if ~exist(fullfilename, 'file')
+    xlswrite(fullfilename,{'Date','','Ref', '', 'mode','','op. time', '', 'T1 (ms)','T2 (ms)', 'x nb tissues...', 'nb of pulses',  'time of a segment (ms)','nb of lines', 'TR (ms)','GRE flip angle (deg)','constraint (true/false)','','first delay', 'equivalent angle of the prep pulse', 'phase','following delay', 'x..nb of prep pulses', '', 'signal in the first line of the kspace at the echo', '', 'PSF high'} );
+end
+
+xlsappend(fullfilename,A);
 
 % xlsappend('manipes_2704\essais_2704.xlsx',A);
 
