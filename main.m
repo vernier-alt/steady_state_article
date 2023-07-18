@@ -7,7 +7,7 @@ dossier = 'segments\';
 % create en environnement variable for the local folder
 my_path = getenv('ENV_VAR_OCMPRAGE');
 if (isempty(my_path)) 
-    msgbox("Create a path for the environement variable ENV_VAR_OCMPRAGE to store results files. (Close/Reopen Matlab)");
+    msgbox("Create a path for the environement variable ENV_VAR_OCMPRAGE with th path to the folder (ex : C:\Documents\MATLAB\grapeSteadyState _deuxespeces_article). (Close/Reopen Matlab)");
     return;
 else 
     cd(my_path);
