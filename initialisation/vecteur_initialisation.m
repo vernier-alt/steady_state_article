@@ -136,7 +136,7 @@ elseif opt.Np == 4
 
   %% 3 Impulsions 
   
-    N1 = 50;
+    N1 = 30;
     
     initVec = zeros(4,3,100) ;
     indice = 1;
